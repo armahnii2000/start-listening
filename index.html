@@ -288,6 +288,11 @@ function showCard(si, cls){
   const sh = SHOWS[si];
   return '<button class="' + (cls || "scard") + '" data-act="open-show" data-s="' + si + '"><img loading="lazy" src="' + esc(sh.cover) + '" alt=""><div class="st at">' + esc(sh.title) + '</div><div class="sa aa">' + esc(sh.author) + " · " + sh.eps.length + " eps</div></button>";
 }
+function bplCard(bi){
+  const bp = BUILTINS[bi];
+  const cov = bp.items.length && SHOWS[bp.items[0][0]] ? SHOWS[bp.items[0][0]].cover : "";
+  return '<button class="scard" data-act="open-bplaylist" data-i="' + bi + '"><img loading="lazy" src="' + esc(cov) + '" alt=""><div class="st at">' + esc(bp.name) + '</div><div class="sa aa">Pinned playlist · ' + bp.items.length + ' episodes</div></button>';
+}
 function gridCard(si){
   const sh = SHOWS[si];
   return '<button class="acard" data-act="open-show" data-s="' + si + '"><img loading="lazy" src="' + esc(sh.cover) + '" alt=""><div class="at">' + esc(sh.title) + '</div><div class="aa">' + esc(sh.author) + " · " + sh.eps.length + " episodes</div></button>";
@@ -331,7 +336,7 @@ function vHome(){
   } else hero = "";
   let h = hero;
   const pins = [COMBINED, MIX].filter(i => i >= 0);
-  if (pins.length) h += '<h2 class="sec">Pinned</h2><div class="shelf">' + pins.map(i => showCard(i)).join("") + "</div>";
+  if (pins.length || BUILTINS.length) h += '<h2 class="sec">Pinned</h2><div class="shelf">' + BUILTINS.map((bp, bi) => bplCard(bi)).join("") + pins.map(i => showCard(i)).join("") + "</div>";
   if (recent.length){
     h += '<h2 class="sec">Recently played</h2>';
     h += recent.slice(0, 10).map(r => {
